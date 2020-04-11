@@ -34,7 +34,7 @@ Vagrant.configure("2") do |config|
   # set up the Standby Vault Nodes
   # Since VM 1 is used for the Active node, for the standby loop start the number from 2 instead of 1
   # as this is used in naming the VMs.
-  (2..2).each do |i|
+  (2..3).each do |i|
     config.vm.define "vault#{i}" do |v1|
       v1.vm.hostname = "v#{i}"
       
