@@ -30,7 +30,7 @@ If you have a separate license file then create a file named as ```license.txt``
 If the license file exists then it will be used to update the existing Vault license.
 
 
-### How to Build
+## How to Build
 Use the Vagrant file to setup the Vault cluster.  
 
 Time delays are included after the initialisation and unseal operations.
@@ -41,10 +41,68 @@ $ vagrant status
 $ vagrant up
 ```
 
+The output of the initialisation process is saved in the file ```primary-keys.txt```.
+The extract of the unseal key is saved in the file ```primary-unseal-key.txt```
+The initial root token is saved in the file ```primary-root-token.txt```
+
 Use the Node name to SSH into individual nodes.
 
 ```
 $ vault ssh vault1
 ```
 
+
+## How to Test
+
+SSH into Vault 1
+
+```
+
+$ vagrant ssh vault1
+
+vagrant@v1:~$ vault status
+Key             Value
+---             -----
+Seal Type       shamir
+Initialized     true
+Sealed          false
+Total Shares    1
+Threshold       1
+Version         1.4.0+prem
+Cluster Name    vault-cluster-32f251fc
+Cluster ID      6a4987ba-e8d5-00ea-27e8-df8dfbe464a4
+HA Enabled      true
+HA Cluster      https://10.100.1.11:8201
+HA Mode         active
+Last WAL        20
+
+vagrant@v1:~$ cat /vagrant/primary-root-token.txt
+s.jHz7FhWrHDAbzdAbPvek3kAT
+
+vagrant@v1:~$ vault login s.jHz7FhWrHDAbzdAbPvek3kAT
+Success! You are now authenticated. The token information displayed below
+is already stored in the token helper. You do NOT need to run "vault login"
+again. Future Vault requests will automatically use this token.
+
+Key                  Value
+---                  -----
+token                s.jHz7FhWrHDAbzdAbPvek3kAT
+token_accessor       wpjs0FpFpEC2zJyi2UiZ6iFP
+token_duration       ∞
+token_renewable      false
+token_policies       ["root"]
+identity_policies    []
+policies             ["root"]
+
+
+vagrant@v1:~$ vault operator raft list-peers
+Node     Address             State       Voter
+----     -------             -----       -----
+Node1    10.100.1.11:8201    leader      true
+Node2    10.100.1.12:8201    follower    true
+Node3    10.100.1.13:8201    follower    true
+
+```
+
+Similar commands can be executed in the other nodes as well.
 
