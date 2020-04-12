@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-echo "Retrieve Unseal key and Roott Token from the filesystem"
+echo "Retrieve Unseal key and Root Token from the filesystem"
 # UNSEAL_KEY=$(cat /vagrant/primary-keys.txt | jq -r .unseal_keys_b64[0])
 # VAULT_TOKEN=$(echo /vagrant/primary-keys.txt | jq -r .root_token)
 
@@ -24,15 +24,21 @@ sleep 5s
 echo "Check for availability of Performance Standby Node"
 
 echo "Login with Root Token"
+sleep 1s
 vault login $VAULT_TOKEN 
+sleep 1s
 echo "Logged-in as Root"
 sleep 15s
 
 echo "Print Vault Status"
+sleep 1s
+
 vault status 
 
-echo "Print Raft Status"
+echo "Print Raft Status" 
+sleep 1s
 vault operator raft list-peers
+sleep 1s
 
 echo "Vault is unsealed"
 
@@ -41,10 +47,12 @@ LICENSE_FILE=/vagrant/ent/license.txt
 
 if [ -f "$LICENSE_FILE" ]; then 
     echo "Vault License file exists in the ent folder"
+    sleep 1s
 
     LICENSE_KEY=$(cat /vagrant/ent/license.txt)
     vault write sys/license text=$LICENSE_KEY
 
-    echo "Updated the license. License details "
+    echo "Updated the license. License details " 
+    sleep 1s
     vault read sys/license
 fi

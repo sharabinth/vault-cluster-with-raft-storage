@@ -34,7 +34,9 @@ vault status
 sleep 5s
 
 echo "Print Raft Status"
+sleep 2s
 vault operator raft list-peers
+sleep 1s
 
 echo "Vault is initialised and unsealed"
 
