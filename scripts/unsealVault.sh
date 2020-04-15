@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 
 echo "Retrieve Unseal key and Root Token from the filesystem"
-# UNSEAL_KEY=$(cat /vagrant/primary-keys.txt | jq -r .unseal_keys_b64[0])
-# VAULT_TOKEN=$(echo /vagrant/primary-keys.txt | jq -r .root_token)
 
 UNSEAL_KEY=$(cat /vagrant/primary-unseal-key.txt)
 VAULT_TOKEN=$(cat /vagrant/primary-root-token.txt)
@@ -56,3 +54,7 @@ if [ -f "$LICENSE_FILE" ]; then
     sleep 1s
     vault read sys/license
 fi
+
+# Add vault root token to the vagrant user profile to avoid logging with the root token 
+# Don't do this for the Prod anvironment!
+sudo echo "export VAULT_TOKEN=$VAULT_TOKEN" >> /home/vagrant/.bashrc

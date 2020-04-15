@@ -52,3 +52,7 @@ if [ -f "$LICENSE_FILE" ]; then
     echo "Updated the license. License details "
     vault read sys/license
 fi
+
+# Add vault root token to the vagrant user profile to avoid logging with the root token 
+# Don't do this for the Prod anvironment!
+sudo echo "export VAULT_TOKEN=$VAULT_TOKEN" >> /home/vagrant/.bashrc
