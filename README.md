@@ -1,12 +1,14 @@
 # Vault Cluster Setup With Integrated Storage
 
-Vault Cluster Setup with Integrated Raft Storage.  
+Vault Cluster Setup with Integrated Raft Storage.   
 
 By default this will setup a 3 Node Vault Cluster.  But the numbers can be changed by altering the Vagrant file.
 
 Vault cluster is initialised and all Vault Nodes are unsealed.
 
-Raft peers are automatically joined to form the Raft cluster.
+Raft peers are automatically joined to form the Raft cluster. 
+
+Vault Audit log file is enabled at the path ```/var/log/vault/```
 
 ## Pre Requisites
 
@@ -25,10 +27,13 @@ This repo uses the Integrated Storage as the storage backend for Vault.  This is
 Create a folder named as ```ent``` and copy the Vault Enterprise binary into the ```ent``` folder.  Vault Open Source binary can also be used.  
 
 ### Vault License File
-If you have a separate license file then create a file named as ```license.txt``` and copy the license information into it.  Place the file in the ```ent``` folder.  Vault ADP Module requires an additional special license which is not part of Vault Enterprise.
+If you have a separate license file then create a file named as ```license.txt``` and copy the license information into it.  Place the file in the ```ent``` folder.  
 
 If the license file exists then it will be used to update the existing Vault license.
 
+### Vault License Auto Loading
+From Vault ver 1.8+, the license auto loading has to be configured. 
+The ```Vagrant``` file contains an entry ```LICENSE_AUTO_LOAD``` which is set to ```YES``` to enable license auto loading feature for the Vault Ent binaries from version 1.8.  The default setting enables auto loading.  If using an older version of Vault Enterprise or Vault OSS then set it to some other value.
 
 ## How to Build
 Use the Vagrant file to setup the Vault cluster.  

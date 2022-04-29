@@ -30,6 +30,7 @@ chmod 0750 /var/{lib,log}/vault
 echo "Creating Vault configuration ..."
 echo 'export VAULT_ADDR="http://localhost:8200"' | tee /etc/profile.d/vault.sh
 
+
 NETWORK_INTERFACE=$(ls -1 /sys/class/net | grep -v lo | sort -r | head -n 1)
 IP_ADDRESS=$(ip address show $NETWORK_INTERFACE | awk '{print $2}' | egrep -o '([0-9]+\.){3}[0-9]+')
 HOSTNAME=$(hostname -s)
@@ -59,10 +60,26 @@ listener "tcp" {
   cluster_addr  = "${IP_ADDRESS}:8201"
   tls_disable   = "true"
 }
+
+#license_path = "/etc/vault/license.txt"
 EOF
+
+
+# If license autoloading is set then set the path to the license file
+if [ ${LICENSE_AUTO_LOAD} == "YES" ]; then 
+    echo "Vault License Auto Loading is Enabled. Make sure the Vault binary version is 1.8+"
+    echo "Setting the license_path in the Vault config file"
+
+    echo 'license_path = "/etc/vault/license.txt"' | tee -a /etc/vault/vault.hcl
+    cp /vagrant/ent/license.txt /etc/vault/
+fi
+
 
 chown root:vault /etc/vault/vault.hcl
 chmod 0640 /etc/vault/vault.hcl
+
+chown root:vault /etc/vault/license.txt
+chmod 0640 /etc/vault/license.txt
 
 tee /etc/systemd/system/vault.service << EOF
 [Unit]

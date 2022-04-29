@@ -43,17 +43,21 @@ echo "Vault is unsealed"
 # Update the license information if there is a separate license file
 LICENSE_FILE=/vagrant/ent/license.txt
 
-if [ -f "$LICENSE_FILE" ]; then 
-    echo "Vault License file exists in the ent folder"
-    sleep 1s
+if [ ${LICENSE_AUTO_LOAD} == "YES" ]; then 
+    echo "License auto loading is enabled. License details "
+    vault read sys/license/status
+else
+    if [ -f "$LICENSE_FILE" ]; then 
+        echo "License auto loading is not enabled. Vault License file exists in the ent folder"
 
-    LICENSE_KEY=$(cat /vagrant/ent/license.txt)
-    vault write sys/license text=$LICENSE_KEY
+        LICENSE_KEY=$(cat /vagrant/ent/license.txt)
+        vault write sys/license text=$LICENSE_KEY
 
-    echo "Updated the license. License details " 
-    sleep 1s
-    vault read sys/license
+        echo "Updated the license. License details "
+        vault read sys/license
+    fi
 fi
+
 
 # Add vault root token to the vagrant user profile to avoid logging with the root token 
 # Don't do this for the Prod anvironment!
